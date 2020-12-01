@@ -3,13 +3,13 @@ BETA TEST - used p5.js editor for this
 
 Worked on:
 1. Graphics
-2. Interactions
+2. Some interactions
 
 Still have to work on:
-1. Fixing Graphics
+1. Fixing Graphics (I'm not really good at drawing ahah but I'll try)
 2. Transitions (I want to try fading in and out through each scene)
 3. More interactions and other scenes
-4. Clean code D: 
+4. Clean code D: more classes?
 
 REFERENCES:
 
@@ -19,7 +19,7 @@ snowflakes - https://p5js.org/examples/simulate-snowflakes.html
 //State change for switching scenes
 let mode = 0;
 let scene1 = false;
-let something = false;
+//let something = false; --> for clickable scene but changed my mind to hover. Kept it just in case
 
 //animation
 let snowflakes = [];
@@ -35,7 +35,7 @@ let woman;
 let suspects;
 let instructions;
 
-//text
+//text from https://www.theguardian.com/books/2006/dec/27/fiction.originalwriting
 let par1 = "Every fortnight when I make my mail flight up to Ambler Bay, I look forward to visiting old Hildie. All the folks up at Ambler are fine by me, but when I deliver Hildie's mail, I'm not just doing my job - I'm exercising a genuine pleasure.";
 
 let par2 = "This trip, though, Hildie was so overwrought she forgot her manners and pounced on the mail packet without offering me a drink. She found the envelope from the photo lab in Anchorage and ripped it open, saying, 'Now those guys'll have to believe me.'";
@@ -66,7 +66,7 @@ function preload(){
 function setup() {
   createCanvas(1000, 650);
   textSize(24);
-  pixelDensity(1);
+  //pixelDensity(1);
 
   mode = 0; // game not started
 
@@ -77,7 +77,7 @@ function draw() {
   noStroke();
   let t = frameCount / 60; //for snow
 
-//-----------------fade transitions---------------------//
+//-----------------fade transitions in first frame text---------------------//
   if (fade<0) {
     fadeAmount=0.5;
   }
@@ -87,7 +87,35 @@ function draw() {
 
   fade += fadeAmount;
 
+  /*working on using this for the transitions between frames
+
+    if scene = #
+      if the x is of value (0-255){ --- not sure if I want it black to white or white to black yet
+        fill #,#,#,x
+        shape
+        x += #
+      }
+     else {
+        false?
+     }
+
+  */
+
 //---------------switching scenes-----------------------//
+
+/*for the background, instead of using images, maybe I'll code it
+
+beginShape;
+
+vertex
+
+endShape;
+
+---> Snowy background (that way I don't have to keep copy pasting the snow)
+---> trees
+---> would be hard to do the sheriff's office and drill site though... so maybe I should just get a high res picture.
+
+*/
 
   if (mode == 0){
     menu();
@@ -113,17 +141,29 @@ function draw() {
 
   if (mode == 3){
     frame_2();
+
     for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
+    snowflakes.push(new snowflake());
   }
 
-  // loop through snowflakes with a for..of loop
   for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
+    flake.update(t);
+    flake.display();
   }
-    image(hildie, 0, 0, 1000, 650);
 
+    image(hildie, 0, 0, 1000, 650); // image placed separately because I want to put the snowflakes animation behind. still haven't figured the efficiency of the code
+
+    /* thinking about making the text boxes a separte class
+
+    Class text {
+
+      show(x,y,z,a,b){
+        fill
+        rectangle
+        text (x, y, z, a, b)
+      }
+  }
+*/
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
@@ -135,21 +175,19 @@ function draw() {
 
 
     for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
+    snowflakes.push(new snowflake());
   }
-  // loop through snowflakes with a for..of loop
   for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
+    flake.update(t);
+    flake.display();
   }
 
     image(hildie, 0, 0, 1000, 650);
     click_scene1();
     frame_2a();
-    //click_scene1();
     if(scene1 == true) {
       frame_4();
-      something = true;
+      //something = true;
       click_scene2();
     }
   }
@@ -167,13 +205,13 @@ function draw() {
     frame_6();
 
       for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
+    snowflakes.push(new snowflake());
   }
 
-  // loop through snowflakes with a for..of loop
+
   for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
+    flake.update(t);
+    flake.display();
   }
 
     textSize(16);
@@ -187,7 +225,7 @@ function draw() {
     background(0);
     textSize(50);
     fill(255);
-    text('END OF BETA', 500, 300);
+    text('END OF DRAFT', 500, 300);
   }
 }
 
@@ -250,7 +288,7 @@ function frame_3(){
 function frame_4(){
   image(scenes[3], 0, 0, 1000, 650);
   fill(random(50),100);
-  ellipse(300, 250, 30, 30);
+  ellipse(300, 250, 30, 30); // for pinpointing the areas of interaction
   ellipse(400, 350, 30, 30);
   ellipse(580, 400, 30, 30);
 }
@@ -270,6 +308,7 @@ let mailOpen, mailOpenA,mailOpenB, mailOpenC;
 function click_scene1(){
   mailOpen = mouseX >650 && mouseX < 850 && mouseY > 500 && mouseY < 580;
 
+// purpose of this is the change the cursor and add text when the user hovers so they know it's an area of interest.
   if (mailOpen) {
     noStroke();
     fill(255,128,0);
@@ -281,10 +320,15 @@ function click_scene1(){
 }
 
 function click_scene2(){
-  mailOpenA = mouseX > 340 && mouseX < 470 && mouseY > 317 && mouseY < 391;
+  // In the instructions, will include the fact that you can just hover over the area marked by the circle.
+  // also the fact that the circle is merely a mark and doesn't have to be clicked
+  // maybe have two different symbols for hover and click so people don't get confused and think it's not working
+
+  mailOpenA = mouseX > 340 && mouseX < 470 && mouseY > 317 && mouseY < 391; // checks if the area is within the bounds
   mailOpenB = mouseX > 239 && mouseX < 357 && mouseY > 188 && mouseY < 293;
   mailOpenC = mouseX > 513 && mouseX < 649 && mouseY > 367 && mouseY < 448;
 
+//hovering
   if (mailOpenA) {
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
@@ -313,23 +357,24 @@ function mousePressed(){
   if (mode==4){
     if (mouseX > 650 && mouseX < 850 && mouseY > 500 && mouseY < 580){
       scene1 = true;
-      print('clicked');
+      print('clicked'); //for checking
     }
-    //print(mouseX, mouseY);
+    //print(mouseX, mouseY); // for checking spots of interest
   }
 
+/*thought about making the hover scene clickable but changed my mind to hover
   if (something == true){
     print(mouseX, mouseY);
 
     if (mouseX > 340 && mouseX < 470 && mouseY > 317 && mouseY < 391){
-      print('LOL')
+      print('clickedA')
     }
     if (mouseX > 239 && mouseX < 384 && mouseY > 188 && mouseY < 312){
-      print('HAHA');
+      print('clickedB');
     }
     if (mouseX > 513 && mouseX < 649 && mouseY > 367 && mouseY < 448){
-      print('HII');
-    }
+      print('clickedB');
+    }*/
 
   }
 
@@ -340,7 +385,7 @@ function mousePressed(){
 
 */
 
-/* COME BACK TO LATER
+/* COME BACK TO LATER (other scenes)
 //Ben Abott
 function frame_7(){
   image(scenes[6], 0, 0, 1000, 650);
