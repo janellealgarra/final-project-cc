@@ -1,5 +1,10 @@
 /*
-BETA TEST - used p5.js editor for this
+ROUGH DRAFT - used p5.js editor for this so I'm not entirely sure yet why the HTML is not working D:
+I followed all the steps from my midterm in loading the html and the code seems to be correct
+but it's still not loading :( I haven't even used any other libraries yet.
+
+This doesn't have my pseudocode and it will look slightly different from this draft but this is my p5.js file
+https://editor.p5js.org/janellealgarra/present/BHLqGuKZW
 
 Worked on:
 1. Graphics
@@ -9,13 +14,15 @@ Still have to work on:
 1. Fixing Graphics (I'm not really good at drawing ahah but I'll try)
 2. Transitions (I want to try fading in and out through each scene)
 3. More interactions and other scenes
-4. Clean code D: more classes?
+4. Clean code D: more classes
+5. Complexity? :( I'm struggling :(
 
 REFERENCES:
 
 snowflakes - https://p5js.org/examples/simulate-snowflakes.html
 
 */
+
 //State change for switching scenes
 let mode = 0;
 let scene1 = false;
@@ -25,6 +32,10 @@ let scene1 = false;
 let snowflakes = [];
 let fade = 0;
 let fadeAmount = 1
+
+//text
+let story = [];
+let s = 0;
 
 //images
 let start;
@@ -52,6 +63,7 @@ let par7 = "Yet this wasn't as far-fetched as it might sound. The arrival of the
 
 
 function preload(){
+  story = loadStrings('story.txt', doText);
   start = loadImage('start.jpg');
   mail = loadImage('mail.png');
   hildie = loadImage('hildie.PNG');
@@ -63,13 +75,24 @@ function preload(){
   }
 }
 
+function doText(data) {
+  lines = data;
+}
+
+function storyText(){
+  console.log("SCRIPT");
+  for (let s = 0; s < story.length; s++) {
+    console.log(story[s]);
+  }
+}
+
 function setup() {
   createCanvas(1000, 650);
   textSize(24);
   //pixelDensity(1);
 
   mode = 0; // game not started
-
+  storyText();
 }
 
 function draw() {
@@ -167,7 +190,7 @@ endShape;
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
-    text(par2, 110, 495, 780, 100);
+    text(story[1], 110, 483, 780, 100);
   }
 
   if(mode == 4){
@@ -198,7 +221,7 @@ endShape;
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
-    text(par3, 110, 484, 780, 100);
+    text(story[6], 110, 484, 780, 100);
   }
 
   if(mode == 6){
@@ -218,7 +241,7 @@ endShape;
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
-    text(par4, 110, 484, 780, 100);
+    text(story[7], 110, 484, 780, 100);
   }
 
   if (mode == 7){
@@ -264,7 +287,7 @@ function frame_1(){
   rect(80, 460, 840, 140, 20);
   textSize(20);
   fill(0,0,0);
-    text(par1, 110, 495, 780, 100);
+  text(story[0], 110, 495, 780, 100);
 }
 
 function frame_2(){
@@ -334,21 +357,21 @@ function click_scene2(){
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
     textSize(21)
-    text(par5, 110, 495, 780, 100);
+    text(story[3], 110, 495, 780, 100);
     cursor(HAND)
   } else if (mailOpenB) {
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
     textSize(18)
-    text(par6, 110, 490, 780, 100);
+    text(story[4], 110, 490, 780, 100);
     cursor(HAND)
   } else if (mailOpenC) {
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
     textSize(18)
-    text(par7, 110, 490, 780, 100);
+    text(story[5], 110, 490, 780, 100);
     cursor(HAND)
   }
 }
