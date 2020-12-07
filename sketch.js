@@ -1,15 +1,17 @@
 /*
 BETA TEST
 
-**does not include pseudocode
+
 
 REFERENCES:
 
 snowflakes - https://p5js.org/examples/simulate-snowflakes.html
+shiver - https://editor.p5js.org/creativecoding/sketches/rWcunRzJW
 
 */
 //
 
+let timer;
 let story = [];
 let s = 0;
 
@@ -25,6 +27,8 @@ let scene8 = false;
 let scene9 = false;
 let scene10 = false;
 let scene11 = false;
+let scene12 = false;
+let scene13 = false;
 
 //animation
 let snowflakes = [];
@@ -40,17 +44,32 @@ let woman;
 let suspects;
 let instructions;
 let winter;
+let ben;
+let flossie;
+let ben_flossie;
+let hildie_tanner;
+let narrator; 
+let win; 
+
+//sound
+let intro;
 
 //character suspicions
 let hildie_sus = 0;
 let ben_sus = 0;
 let tanner_sus = 0;
 
-
 function preload(){
   story = loadStrings('story.txt', doText);
+  
+  //f = loadFont('Montserrat-Regular.otf');
+  f_2 = loadFont('vibes.otf');
+  
+  //intro = loadSound('sounds/intro1.mp3');
+  interact = loadSound('sounds/interest.mp3');
+  
+  start = loadImage('images/start.png');
   winter = loadImage('images/winter.png');
-  start = loadImage('images/start.jpg');
   mail = loadImage('images/mail.png');
   woman = loadImage('images/dead.png');
   suspects = loadImage('images/scene_10.png');
@@ -61,6 +80,7 @@ function preload(){
   ben_flossie = loadImage('images/ben_flossie.png');
   hildie_tanner = loadImage('images/hildie_tanner.png');
   narrator = loadImage('images/narrator.png');
+  win = loadImage('images/win2.jpg');
   
     for (let i = 1; i < 11; i++){
     scenes[i] = loadImage('images/scene_' + i + '.png');
@@ -85,7 +105,13 @@ function setup() {
   
   mode = 0; // game not started
   storyText();
+  //textFont('');
+  //textFont(f);
+  //intro.play();
+  //intro.setVolume(0.5);
+  timer = new Timer();
 }
+
 
 function draw() {
   clear(); // clear screen each time it shifts to a different mode
@@ -123,99 +149,72 @@ function draw() {
   }
   
   if (mode == 2){
+    
     frame_1();
+    intro.stop();
+    
+    if (timer.count(7000)){
+      frame_2();
+      fill(255,255,255, 220);
+      rect(80, 460, 840, 140, 20);
+      textSize(18);
+      fill(0,0,0);
+      text(story[1], 110, 483, 780, 100);
+      fill(255);
+      textSize(18);
+      text('*do not press enter*',700,630);
+    }
+    
+    if (timer.count(14000)){
+      frame_2();
+    
+
+      fill(random(50),100);
+      ellipse(727, 547, 30, 30);
+    
+      click_scene1();
+
+      if(scene1 == true) {
+        frame_3();
+        hover_scene1();
+      } 
+    }
   }
   
-  if (mode == 3){
-    frame_2();
-    for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
-  }
-
-  // loop through snowflakes with a for..of loop
-  for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
-  }
-    //image(hildie, 0, 0, 1000, 650);
-    
-    fill(255,255,255, 220);
-    rect(80, 460, 840, 140, 20);
-    fill(0,0,0);
-    text(story[1], 110, 483, 780, 100);
-  }
-  
-  if(mode == 4){
-    frame_2();
-    
-
-   fill(random(50),100);
-   ellipse(727, 547, 30, 30);
-
-    for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
-  }
-  // loop through snowflakes with a for..of loop
-  for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
-  }
-    
-    click_scene1();
-
-    if(scene1 == true) {
+  if (mode==3){
       frame_3();
       hover_scene1();
-    }  
+      timer.start = false;
   }
   
-  //
-  if(mode == 5){
+  if (mode == 4){
     frame_5();
-    textSize(16);
+    fill(255);
+      textSize(18);
+      text('*do not press enter*',700,630);
+    textSize(15);
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
     text(story[5], 110, 484, 780, 100);
-  }
-  
-  if(mode == 6){
-    frame_6();
     
-      for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
-  }
-
-  // loop through snowflakes with a for..of loop
-  for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
-  }
+    if (timer.count(10000)){
+      frame_6();
     
     textSize(16);
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
     text(story[6], 110, 484, 780, 100);
-  }
-  
-  //HILDIE ASKS A QUESTION
-  if (mode == 7){
-    frame_2();
+    }
+    
+    if(timer.count(20000)) { 
+      frame_2();
     click_scene4();
     
     fill(random(50),100);
     ellipse(710, 300, 30, 30);
-    
-    for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
-  }
-  // loop through snowflakes with a for..of loop
-  for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
-  }
-    
+
     if(scene8 == true) {
       frame_2();
       textSize(22);
@@ -223,12 +222,17 @@ function draw() {
       rect(80, 460, 840, 140, 20);
       fill(0,0,0);
       text(story[7], 115, 530);
-    }    
+      fill(255);
+      textSize(18);
+      text('*press enter to continue*',700,630);
+    }   
+    }
+    
   }
   
-  //FIRST DECISION ---> HILDIE IMPACT
-  if (mode == 8){
-    frame_2();
+
+  if (mode == 5){
+          frame_2();
     decision_1();
     click_scene2();
     textSize(18);
@@ -239,6 +243,9 @@ function draw() {
       textSize(18);
       fill(255);
       text('You chose to lie. Hildie will remember that.',330,40);
+       fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
       
       
     }else if(scene5 == true){
@@ -251,33 +258,100 @@ function draw() {
       rect(80, 460, 840, 140, 20);
       fill(0,0,0);
       text(story[8],  110, 486, 780, 100);
+       fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
     }
     
     //TO FIX: buttons diappear but areas are still clickable
   }
   
-  if (mode == 9){
+  if(mode == 6){
+    if(scene4 == true) {
+      frame_2();
+      textSize(18);
+      fill(255);
+      text('You chose to lie. Hildie will remember that.',330,40);
+       fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+      
+      
+    }else if(scene5 == true){
+      frame_2();
+      textSize(18);
+      fill(255);
+      text('You chose to tell the truth. Hildie will remember that.',280,40);
+      textSize(17);
+      fill(204,229,255, 220);
+      rect(80, 460, 840, 140, 20);
+      fill(0,0,0);
+      text(story[8],  110, 486, 780, 100);
+       fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+    }
+    timer.start = false;
+  }
+  
+  if (mode == 7){
     frame_5();
-    textSize(15);
+    textSize(13);
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
     text(story[9], 110, 485, 780, 100);
+      fill(255);
+      textSize(19);
+      text('*do not press enter*',700,630);
+    
+    if(timer.count(15000)){
+      frame_7();
+    }
+    
+    if(timer.count(22000)){
+      frame_8();
+    }
+    
+    if(timer.count(29000)){
+      frame_9();
+    }
+    
+    if(timer.count(40000)){
+      image(scenes[5], 0, 0, 1000, 650);
+    decision_2();
+    click_scene2();
+    textSize(18);
+    fill(255);
+    text('*Your decision will have an impact in your relationship with Ben',250,40);
+    if(scene6 == true) {
+      image(scenes[5], 0, 0, 1000, 650);
+      textSize(18);
+      fill(255);
+      text('You chose to not withold information. Ben will remember that.',260,40);
+      textSize(20);
+      fill(204,229,255, 220);
+      rect(80, 460, 840, 140, 20);
+      fill(0,0,0);
+      text(story[13],  110, 502, 780, 100);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+       
+    }else if(scene7 == true){
+      image(scenes[5], 0, 0, 1000, 650);
+      textSize(18);
+      fill(255);
+      text('You chose to withhold information. Ben will remember that.',275,40);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+    }
+    }
+    
   }
   
-  if (mode == 10){
-    frame_7();
-  }
-  
-  if (mode == 11){
-    frame_8();
-  }
-  
-  if (mode == 12){
-    frame_9();
-  }
-  
-  if (mode == 13){
+  if(mode==8){
     image(scenes[5], 0, 0, 1000, 650);
     decision_2();
     click_scene2();
@@ -294,57 +368,65 @@ function draw() {
       rect(80, 460, 840, 140, 20);
       fill(0,0,0);
       text(story[13],  110, 502, 780, 100);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
        
     }else if(scene7 == true){
       image(scenes[5], 0, 0, 1000, 650);
       textSize(18);
       fill(255);
       text('You chose to withhold information. Ben will remember that.',275,40);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+    }
+    timer.start = false;
+    }
+  
+  if (mode == 9){
+    frame_10();
+      fill(255);
+      textSize(18);
+      text('*do not press enter*',700,630);
+    
+    if(timer.count(7000)){
+      frame_11();
+    }
+    
+    if(timer.count(14000)){
+      frame_12();
+      hover_scene2();
+      fill(random(50),100);
+      ellipse(400, 350, 40, 40);
+      
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
     }
   }
-  
-  if (mode == 14){
-    frame_10();
-  }
-  
-  if (mode == 15){
-    frame_11();
-  }
-  
-  if (mode == 16){
-    
+
+  if (mode == 10){
+  timer.start = false;
     frame_12();
-    hover_scene2();
-    fill(random(50),100);
-    ellipse(400, 350, 40, 40);
+      hover_scene2();
+      fill(random(50),100);
+      ellipse(400, 350, 40, 40);
+      
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
   }
   
-  if (mode == 17){
+  if (mode == 11){
     frame_13();
-    for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
-  }
-  // loop through snowflakes with a for..of loop
-  for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
-  }
-  }
-  
-  if (mode == 18){
-    frame_13a();
-    for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
-  }
-  // loop through snowflakes with a for..of loop
-  for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
-  }
-  }
-  
-  if (mode == 19){
-    image(scenes[8], 0, 0, 1000, 650);
+    
+    if (timer.count(10000)){
+      frame_13a();
+    }
+    
+    if (timer.count(17000)){
+      image(scenes[8], 0, 0, 1000, 650);
     fill(random(50),100);
     ellipse(693, 300, 30, 30);
     click_scene3();
@@ -356,139 +438,197 @@ function draw() {
       rect(80, 460, 840, 140, 20);
       fill(0,0,0);
       text('Sheriff: "What do you think?"', 115, 530);
+      
+      fill(255);
+      textSize(18);
+      text('*press enter to continue*',700,630);
+    }
     }
   }
   
-  if (mode == 20){
+  if (mode == 12){
     image(scenes[8], 0, 0, 1000, 650);
     click_scene2();
     decision_3();
     
     textSize(18);
     fill(255);
-    text('*Your decision will have an impact in your relationship with Tanner',250,40);
+    text('*Your decision will have an impact in your relationship with Tanner',240,40);
     if(scene10 == true) {
       image(scenes[8], 0, 0, 1000, 650);
       text('You chose to go against Tanner. Tanner will remember that.',260,40);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
        
     }else if(scene11 == true){
       image(scenes[8], 0, 0, 1000, 650);
-      text('You chose to give Tanner the benefit of the doubt. Tanner will remember that.',225,40);
+      text('You chose to give Tanner the benefit of the doubt. Tanner will remember that.',205,40);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
     }
     
   }
   
-  if (mode == 21){
+  if (mode == 13){
+    textSize(18);
+    fill(255);
+    text('*Your decision will have an impact in your relationship with Tanner',240,40);
+    if(scene10 == true) {
+      image(scenes[8], 0, 0, 1000, 650);
+      text('You chose to go against Tanner. Tanner will remember that.',260,40);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+       
+    }else if(scene11 == true){
+      image(scenes[8], 0, 0, 1000, 650);
+      text('You chose to give Tanner the benefit of the doubt. Tanner will remember that.',205,40);
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+    }
+    
+    timer.start = false;
+  }
+  
+  if (mode == 14){
     frame_6();
-    for (let i = 0; i < random(5); i++) {
-    snowflakes.push(new snowflake()); // append snowflake object
-  }
-  // loop through snowflakes with a for..of loop
-  for (let flake of snowflakes) {
-    flake.update(t); // update snowflake position
-    flake.display(); // draw snowflake
-  }
     textSize(20);
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
     text(story[19], 115, 507, 780, 100);
-  }
-  
-  if (mode == 22){
-    frame_14();
-  }
-  
-  if (mode == 23){
-    if (hildie_sus == 1 && ben_sus == 1 && tanner_sus == 1 || hildie_sus == 1 && ben_sus == 1 || tanner_sus == 1 && ben_sus == 1){
+      fill(255);
+      textSize(18);
+      text('*do not press enter*',700,630);
+    
+    if (timer.count(7000)){
+      frame_14();
+    }
+    
+    if (timer.count(13000)){
+      if (hildie_sus == 1 && ben_sus == 1 && tanner_sus == 1 || hildie_sus == 1 && ben_sus == 1 || tanner_sus == 1 && ben_sus == 1){
       frame_lost();
     } else {
         frame_14a();
         hover_scene3();
+        fill(255);
+        textSize(18);
+        text('*press enter 2x to continue*',700,630);
+    }
     }
   }
   
-  if (mode == 24){
+  
+  if (mode == 15){
     frame_14a();
     hover_scene3();
+    timer.start = false;
   }
   
-  if (mode == 25){
+  if (mode == 16){
     frame_15();
+      fill(255);
+      textSize(18);
+      text('*do not press enter*',700,630);
+    
+    if (timer.count(7000)){
+      frame_16();
+    }
+    
+    if (timer.count(14000)){
+      frame_17();
+    }
+    
+    if (timer.count(21000)){
+      frame_18();
+    }
+    
+    if (timer.count(28000)){
+      frame_19();
+    }
+    
+    if (timer.count(35000)){
+      frame_20();
+    }
+    
+    if (timer.count(42000)){
+      frame_21();
+    }
+    
+    if (timer.count(49000)){
+      frame_22();
+    }
+    
+    if (timer.count(56000)){
+      frame_23();
+    }
+    
+    if (timer.count(63000)){
+      frame_24();
+    }
+    
+    if (timer.count(70000)){
+      frame_25();
+    }
+    
+    if (timer.count(77000)){
+      frame_26();
+    }
+    
+    if (timer.count(84000)){
+      frame_27();
+    }
+    
+    if (timer.count(91000)){
+      frame_28();
+    }
+    
+    if (timer.count(98000)){
+      frame_29();
+    }
+    
+    if (timer.count(105000)){
+      frame_30();
+    }
+    
+    if (timer.count(112000)){
+      frame_31();
+    }
+    
+    if (timer.count(119000)){
+      frame_32();
+    }
+    
+    if (timer.count(126000)){
+      frame_33();
+      fill(255);
+      textSize(18);
+      text('*press enter 2x to continue*',700,630);
+    }
+    
   }
   
-  if (mode == 26){
-    frame_16();
-  }
-  
-  if (mode == 27){
-    frame_17();
-  }
-  
-  if (mode == 28){
-    frame_18();
-  }
-  
-  if (mode == 29){
-    frame_19();
-  }
-  
-  if (mode == 30){
-    frame_20();
-  }
-  
-  if (mode == 31){
-    frame_21();
-  }
-  
-  if (mode == 32){
-    frame_22();
-  }
-  
-  if (mode == 33){
-    frame_23();
-  }
-  
-  if (mode == 34){
-    frame_24();
-  }
-  
-  if (mode == 35){
-    frame_25();
-  }
-  
-  if (mode == 36){
-    frame_26();
-  }
-  
-  if (mode == 37){
-    frame_27();
-  }
-  if (mode == 38){
-    frame_28();
-  }
-  if (mode == 39){
-    frame_29();
-  }
-  if (mode == 40){
-    frame_30();
-  }
-  
-  if (mode == 41){
-    frame_31();
-  }
-  
-  if (mode == 42){
-    frame_32();
-  }
-  
-  if (mode == 43){
+  if (mode == 17){
     frame_33();
+    fill(255);
+    textSize(18);
+    text('*press enter 2x to continue*',700,630);
   }
   
+  if (mode == 18){
+    frame_34();
+    decision_4();
+    
+    if (scene12 == true){
+      frame_win();    
+    }else if (scene13 == true){
+      frame_lost();
+    }
+  }
 }
-
-
 
 
 //---------------FUNCTIONS----------------------------//
@@ -496,12 +636,52 @@ function keyPressed(){
   if (keyCode === ENTER){
     mode += 1;
   }
+  
+  if (mode == 44){
+    if (key == 'a' || 'A'){
+       //idk
+    }
+    
+    if (key == 'b' || 'B'){
+      ellipse(width/2, height/2, 30,30);
+    }
+    
+    if (key == "c" || "C"){
+      ellipse(width/2, height/2, 30,30);
+    }
+    
+    if (key == "d" || "D"){
+      ellipse(width/2, height/2, 30,30);
+    }
+  }
 }
 
 function menu(){
-  background(start);
+  let txt = "The Last Snowfall";
+  image(start, 0, 0, 1000, 650);
   fill(171,186,209,fade);
-  text('press enter to begin', random(120,121), random(500,501));
+  textSize(18)
+  text('an original short story by Nicholas Blincoe', 324, 375);
+  textSize(14);
+  text('Creative Coding final project by Janelle Algarra', 20, 630);
+  textSize(22);
+  text('press enter to begin', random(400,401), random(500,501));
+  
+  textSize(60);
+  let txtH = 48;
+  let txtW = textWidth(txt);
+  let spacing = txtW / txt.length;
+    
+  for(let i = 0; i < txt.length; i++){
+    let c = txt.charAt(i);
+    
+    let offsetX = random(-spacing / 10.0, spacing / 10.0);
+    let offsetY = random(-spacing / 10.0, spacing / 10.0);
+        
+    let startX = (width - txtW) / 2 + spacing / 2;
+    let y = height / 2; //  + textHeight / 2;
+    text(c, startX + i * spacing + offsetX, y + offsetY);
+  }
 }
 
 function opening(){
@@ -512,18 +692,20 @@ function opening(){
     textSize(18)
     text('press enter to continue', random(700,701), random(500,501));
     fill(random(180),200);
-     ellipse(850, 343, 30, 30);
+     ellipse(355, 335, 30, 30);
 }
 
 function frame_1(){
   image(mail, 0, 0, 1000, 650);
-
+  fill(255);
+  textSize(18);
+  text('*do not press enter*',700,630);
   
   fill(255,255,255, 220);
   rect(80, 460, 840, 140, 20);
-  textSize(20);
+  textSize(21);
   fill(0,0,0);
-    text(story[0], 110, 495, 780, 100);
+    text(story[0], 112, 490, 780, 100);
 }
 
 
@@ -540,6 +722,9 @@ function frame_3(){
   ellipse(300, 250, 30, 30);
   ellipse(400, 350, 30, 30);
   ellipse(580, 400, 30, 30);
+  
+  fill(255);
+  text('press enter 2x to continue',700,630)
 
 }
 
@@ -554,20 +739,20 @@ function frame_6(){
 function frame_7(){
   cursor(ARROW);
   image(scenes[4], 0, 0, 1000, 650);
-  textSize(21);
+  textSize(20);
   fill(255,255,255, 220);
   rect(80, 460, 840, 140, 20);
   fill(0,0,0);
-  text(story[10], 115, 502, 780, 100);
+  text(story[10], 110, 502, 780, 100);
 }
 
 function frame_8(){
   image(scenes[5], 0, 0, 1000, 650);
-  textSize(21);
+  textSize(20);
   fill(255,255,255, 220);
   rect(80, 460, 840, 140, 20);
   fill(0,0,0);
-  text(story[11], 115, 512, 780, 100);
+  text(story[11], 100, 512, 780, 100);
 }
 
 function frame_9(){
@@ -576,7 +761,7 @@ function frame_9(){
   fill(255,255,255, 220);
   rect(80, 460, 840, 140, 20);
   fill(0,0,0);
-  text(story[12], 113, 495, 780, 100);
+  text(story[12], 100, 495, 780, 100);
 }
 
 function frame_10(){
@@ -594,7 +779,7 @@ function frame_11(){
   fill(255,255,255, 220);
   rect(80, 460, 840, 140, 20);
   fill(0,0,0);
-  text(story[15], 113, 493, 780, 100);
+  text(story[15], 100, 493, 780, 100);
 }
 
 function frame_12(){
@@ -782,7 +967,7 @@ function frame_25(){
   fill(255,255,255, 220);
   rect(80, 460, 840, 140, 20);
   fill(0,0,0);
-  text(story[33], 115, 480, 780, 100);
+  text(story[33], 115, 485, 780, 100);
 }
 
 function frame_26(){
@@ -804,7 +989,7 @@ function frame_27(){
   fill(255,255,255, 220);
   rect(80, 460, 840, 140, 20);
   fill(0,0,0);
-  text(story[35], 115, 490, 780, 100);
+  text(story[35], 115, 480, 780, 100);
 }
 
 function frame_28(){
@@ -875,7 +1060,7 @@ function frame_33(){
 }
 
 function frame_34(){
-  image(suspects, 0, 0, 1000, 650);
+  image(narrator, 0, 0, 1000, 650);
   textSize(25);
   fill(0,0,0);
   frameRate(10);
@@ -884,22 +1069,61 @@ function frame_34(){
   text('Flossie Jones', random(515,518), random(160,165));
   text('Hildie Johnson', random(780,783), random(140,145));
   
-  textSize(20);
-  fill(255,255,255, 220);
-  rect(80, 460, 840, 140, 20);
+  
   fill(0,0,0);
-  text('Who is the killer?', 113, 505, 780, 100);
+  textSize(70);
+  let txt = "Who is the killer?";
+  
+  let txtH = 48;
+  let txtW = textWidth(txt);
+  let spacing = txtW / txt.length;
+    
+  for(let i = 0; i < txt.length; i++){
+    let c = txt.charAt(i);
+    
+    let offsetX = random(-spacing / 10.0, spacing / 10.0);
+    let offsetY = random(-spacing / 10.0, spacing / 10.0);
+        
+    let startX = (width - txtW) / 2 + spacing / 2;
+    let y = height / 2; //  + textHeight / 2;
+    text(c, startX + i * spacing + offsetX, y + offsetY);
+  }
+  
 }
-
-
 
 
 function frame_lost(){
+  //ADD CLICK TO RESTART GAME
   background(0);
   textSize(30);
   fill(255);
-  text('Because of your choices, you were framed',350,300);   
+  
+  let txt = "Because of your choices, you were framed for the murder";
+  
+  textSize(30);
+  let txtH = 48;
+  let txtW = textWidth(txt);
+  let spacing = txtW / txt.length;
+    
+  for(let i = 0; i < txt.length; i++){
+    let c = txt.charAt(i);
+    
+    let offsetX = random(-spacing / 10.0, spacing / 10.0);
+    let offsetY = random(-spacing / 10.0, spacing / 10.0);
+        
+    let startX = (width - txtW) / 2 + spacing / 2;
+    let y = height / 2; //  + textHeight / 2;
+    text(c, startX + i * spacing + offsetX, y + offsetY);
+  }
 }
+
+function frame_win(){
+  image(win,0,0,1000,650);
+  textSize(43);
+  textFont(f_2);
+  text(story[42], 20, 20, 960, 630);
+}
+
 
 
 
@@ -940,11 +1164,36 @@ function decision_3(){
   
 }
 
+function decision_4(){
+  print(mouseX,mouseY);
+  fill(128);
+  rect(130,500,150,50,20);
+  
+  fill(255, 128,0);
+  rect(330,500,150,50,20);
+  
+  fill(178,102,255);
+  rect(530,500,150,50,20);
+  
+  fill(51,102,0);
+  rect(730,500,150,50,20)
+  
+  fill(255);
+  textSize(20);
+  text('Tanner',170,530);
+  text('Ben',385,530);
+  text('Flossie',573,530);
+  text('Hildie',777,530);
+}
+
 
 
 
 //clicks
 let mailOpen, mailOpenA,mailOpenB, mailOpenC, yes,no, talk, body,sheriff, hildie_q, forensic1, forensic2;
+
+let w = 1000;
+let h = 650; // wait dont know how?
 
 //CLICK SCENES
 function click_scene1(){
@@ -1009,10 +1258,10 @@ function hover_scene1(){
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
-    textSize(21)
+    textSize(19)
     text(story[2], 110, 495, 780, 100);
     fill(0,255,255);
-    textSize(18)
+    textSize(20)
     text('hover to reveal',mouseX,mouseY)
     //cursor(HAND)
   } else if (mailOpenB) {    
@@ -1028,7 +1277,7 @@ function hover_scene1(){
     fill(255,255,255, 220);
     rect(80, 460, 840, 140, 20);
     fill(0,0,0);
-    textSize(18)
+    textSize(19)
     text(story[4], 110, 490, 780, 100);
     fill(0,255,255);
     text('hover to reveal',mouseX,mouseY)
@@ -1077,7 +1326,7 @@ function hover_scene3(){
 
 
 function mousePressed(){
-  if (mode==4){
+  if (mode==2){
     if (mouseX > 639 && mouseX < 813 && mouseY > 500 && mouseY < 600){
       scene1 = true;
       //print('clicked');
@@ -1085,13 +1334,13 @@ function mousePressed(){
     //print(mouseX, mouseY);
   }
   
-  if (mode == 7){
+  if (mode == 4){
     if (mouseX > 630 && mouseX < 786 && mouseY > 69 && mouseY < 648){
       scene8 = true;
     }
   }
   
-  if (mode==8){
+  if (mode==5){
     
     if (mouseX > 151 && mouseX < 402 && mouseY > 452 && mouseY < 531){
       scene4 = true;
@@ -1103,7 +1352,7 @@ function mousePressed(){
     }
   }
   
-  if (mode == 13){
+  if (mode == 7){
     if (mouseX > 151 && mouseX < 402 && mouseY > 452 && mouseY < 531){
       scene6 = true;
     }else if(mouseX > 551 && mouseX < 800 && mouseY > 452 && mouseY < 531){
@@ -1114,13 +1363,13 @@ function mousePressed(){
     }
   }
 
-if (mode == 19){
+  if (mode == 11){
     if (mouseX > 619 && mouseX < 767 && mouseY > 76 && mouseY < 648){
       scene9 = true;
     }
   }
 
-if (mode == 20){
+if (mode == 12){
     if (mouseX > 151 && mouseX < 402 && mouseY > 452 && mouseY < 531){
       scene10 = true;
       //Tanner is suspicious
@@ -1130,6 +1379,14 @@ if (mode == 20){
       scene11=true;
     }
   }
+  
+  if (mode == 18){
+    if (mouseX > 731 && mouseX < 880 && mouseY > 502 && mouseY < 551){
+        scene12 = true;
+      }else if ((mouseX > 135 && mouseX < 278 && mouseY > 502 && mouseY < 551) || (mouseX > 337 && mouseX < 474 && mouseY > 502 && mouseY < 551) || (mouseX > 536 && mouseX < 676 && mouseY > 502 && mouseY < 551)){
+        scene13 = true;
+      }
+}
 }
 
 
@@ -1164,4 +1421,27 @@ function snowflake() {
   this.display = function() {
     ellipse(this.posX, this.posY, this.size);
   };
+}
+
+
+class Timer {
+    constructor() {
+        this.start = false;
+        this.time = 0;
+        
+    }
+    count(ms) {
+        if(this.start == false) {
+            this.time = millis()
+            this.start = true;
+        }
+        else {
+            if(millis() - this.time > ms) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }  
+    }
 }
